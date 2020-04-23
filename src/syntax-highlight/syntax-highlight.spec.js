@@ -1,11 +1,10 @@
 import { h } from 'dom-chef'
 import test from 'ava'
+import syntaxHighlight from './syntax-highlight'
 
 import '../../test/setup-jsdom'
 
 require('../vendor/prism.js')
-
-const syntaxHighlight = require('.').default
 
 const noop = () => {}
 

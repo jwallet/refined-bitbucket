@@ -57,3 +57,6 @@
 .token.entity {
     cursor: help;
 }
+.token * {
+    color: inherit;
+}

@@ -5,7 +5,7 @@
 import { h } from 'dom-chef'
 import elementReady from 'element-ready'
 import debounce from '../debounce'
-import { getLanguageClass } from './source-handler'
+import { getLanguageClass, getFilepathFromElement } from './source-handler'
 
 import './prism.css'
 import './fix.css'
@@ -28,7 +28,8 @@ export default function syntaxHighlight(diff, afterWordDiff) {
         return
     }
 
-    const languageClass = getLanguageClass(diff)
+    const filePath = getFilepathFromElement(diff)
+    const languageClass = getLanguageClass(filePath)
 
     if (!languageClass) {
         return

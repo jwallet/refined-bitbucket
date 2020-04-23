@@ -27,7 +27,7 @@ import pullrequestCommitAmount from './pullrequest-commit-amount'
 import insertPullrequestTemplate from './pullrequest-template'
 import insertShowComments from './show-comments'
 import addSidebarCounters from './sidebar-counters'
-import syntaxHighlight from './syntax-highlight'
+import { syntaxHighlight, syntaxHighlightFile } from './syntax-highlight'
 import comparePagePullRequest from './compare-page-pull-request'
 import setTabSize from './tab-size'
 import mergeCommitMessage from './merge-commit-message'
@@ -46,6 +46,7 @@ import {
     isBranch,
     isComparePage,
     isDashBoardOverview,
+    isSourceCode,
 } from './page-detect'
 
 import addStyleToPage from './add-style'
@@ -85,6 +86,8 @@ function init(config) {
             comparePagePullRequest()
         }
         codeReviewFeatures(config)
+    } else if (isSourceCode()) {
+        sourceCodeFeatures(config)
     }
 
     if (config.addSidebarCounters) {
@@ -214,6 +217,12 @@ function codeReviewFeatures(config) {
 
     if (config.stickyHeader) {
         setStickyHeader()
+    }
+}
+
+function sourceCodeFeatures(config) {
+    if (config.syntaxHighlight) {
+        syntaxHighlightFile()
     }
 }
 

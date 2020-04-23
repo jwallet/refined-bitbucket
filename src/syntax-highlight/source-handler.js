@@ -6,15 +6,14 @@ import languagesExtensions from './language-ext'
 declare var Prism: { languages: { [language: string]: Object } }
 
 /**
- * Retrieves a class according to the element data-filename or data-path attribute.
- * For example, calling it passing an element with a data-filename (or data-path)
+ * Retrieves a class according to the filePath data-filename or data-path attribute.
+ * For example, calling it passing a data-filename (or data-path)
  * like "/path/to/file/filename.java" would return "language-java".
  *
- * @param  {HTMLElement} element An HTML element. Pass anything different and bear the consequences :)
+ * @param  {string} filePath The filename
  * @return {string} The class extracted from the element's file path.
  */
-export function getLanguageClass(element: HTMLElement): string {
-    const filePath = getFilepathFromElement(element)
+export function getLanguageClass(filePath: string): string {
     const fileExtension = getExtension(filePath).toLowerCase()
 
     if (fileExtension in languagesExtensions) {
