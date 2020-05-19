@@ -45,8 +45,13 @@ async function get<T: Object>(
             Authorization: `Bearer ${token}`,
         }),
     })
-    const result: BitbucketAPIErrorResponse | T = await response.json()
-    return result
+    try {
+        const result: BitbucketAPIErrorResponse | T = await response.json()
+        return result
+    } catch (ex) {
+        console.error(ex)
+        return ex
+    }
 }
 
 function getUrl(request: Request | RequestById | RequestByTerm): string {
