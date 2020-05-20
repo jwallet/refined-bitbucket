@@ -152,15 +152,17 @@ fieldset.menus:disabled .option label {
 }
 .option svg {
     padding: 0 0.3em 0 0;
+    width: 24px;
+    height: 24px;
 }
-.option svg path.icon {
+.option svg path {
     fill: rgb(66, 82, 110);
 }
-.option:hover svg path.icon {
+.option:hover svg path {
     fill: rgb(0, 82, 204);
 }
-.option[data-state='disabled'] svg path.icon,
-fieldset.menus:disabled .option svg path.icon {
+.option[data-state='disabled'] svg path,
+fieldset.menus:disabled .option svg path {
     fill: gray;
 }
 
