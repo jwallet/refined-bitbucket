@@ -448,7 +448,7 @@ test('should show comments section if a new comment while comments are hidden', 
     })
 
     // The button should hide comments, all comments should be hidden
-    t.is(showComments.getAttribute('aria-expanded') === 'true', false)
+    t.false(showComments.getAttribute('aria-expanded') === 'true')
 
     // Add a comment
     diff.querySelector('.refract-content-container').appendChild(
@@ -462,7 +462,7 @@ test('should show comments section if a new comment while comments are hidden', 
     await delay(200)
 
     // The button should show comments
-    t.is(showComments.getAttribute('aria-expanded') === 'true', true)
+    t.true(showComments.getAttribute('aria-expanded') === 'true')
 
     diff.querySelectorAll('.comment-thread-container').forEach(comment => {
         t.is(comment.style.display, '')
@@ -662,7 +662,7 @@ test('should show General comments section if a new comment while comments are h
     })
 
     // The button should hide comments, all comments should be hidden
-    t.is(showComments.getAttribute('aria-expanded') === 'true', false)
+    t.false(showComments.getAttribute('aria-expanded') === 'true')
 
     // Add a comment
     diff.querySelector('#comments-list').appendChild(
@@ -676,7 +676,7 @@ test('should show General comments section if a new comment while comments are h
     await delay(200)
 
     // The button should show comments
-    t.is(showComments.getAttribute('aria-expanded') === 'true', true)
+    t.true(showComments.getAttribute('aria-expanded') === 'true')
 
     diff.querySelectorAll('#comments-list li').forEach(comment => {
         t.is(comment.style.display, '')
