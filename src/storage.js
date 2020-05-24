@@ -1,3 +1,4 @@
+// @flow
 /* global chrome */
 
 import { getRepoURL } from './page-detect'
@@ -10,7 +11,7 @@ export const getDashboardPullRequestsStorageKey = actionId =>
 
 export function getStorageSyncValue(key: string) {
     return new Promise(resolve => {
-        chrome.storage.sync.get(key, function(result) {
+        ;(chrome.storage: any).sync.get(key, result => {
             resolve(result[key])
         })
     })
@@ -18,7 +19,7 @@ export function getStorageSyncValue(key: string) {
 
 export function setStorageSyncValue(key: string, value: any) {
     return new Promise(resolve => {
-        chrome.storage.sync.set({ [key]: value }, function(result) {
+        ;(chrome.storage: any).sync.set({ [key]: value }, () => {
             resolve()
         })
     })
@@ -26,7 +27,7 @@ export function setStorageSyncValue(key: string, value: any) {
 
 export function getStorageLocalValue(key: string) {
     return new Promise(resolve => {
-        chrome.storage.local.get(key, function(result) {
+        ;(chrome.storage: any).local.get(key, result => {
             resolve(result[key])
         })
     })
@@ -34,7 +35,7 @@ export function getStorageLocalValue(key: string) {
 
 export function setStorageLocalValue(key: string, value: any) {
     return new Promise(resolve => {
-        chrome.storage.local.set({ [key]: value }, function(result) {
+        ;(chrome.storage: any).local.set({ [key]: value }, () => {
             resolve()
         })
     })

@@ -1,14 +1,12 @@
 // @flow
-import _deburr from 'lodash.deburr'
 import { h } from 'dom-chef'
 import elementReady from 'element-ready'
-import 'typeahead'
+import 'typeahead' // eslint-disable-line import/no-unresolved
 import debounce from '../../debounce'
 import { IUser } from '../../_core/models'
-import { getRepoURL } from '../../page-detect'
 import { getSearchedReviewers, addSearchedReviewer } from '../data-selectors'
 
-type BloodhoundResultTemplate = $Exact<{ query: String, dataset: string }>
+type BloodhoundResultTemplate = $Exact<{ query: string, dataset: string }>
 
 export function getTypeaheadElement(): HTMLInputElement {
     return (
@@ -32,7 +30,7 @@ function getNotFoundResultElement({
             <div class="select2-no-results tt-suggestion">
                 {query
                     ? `Found no matches for ${query}`
-                    : `Continue typing to search for a user`}
+                    : 'Continue typing to search for a user'}
             </div>
         </div>
     )
@@ -40,7 +38,7 @@ function getNotFoundResultElement({
 
 function getSuggestionResultElement(user: IUser): HTMLElement {
     const { display_name: name, nickname } = user
-    const username = nickname == name ? '' : nickname
+    const username = nickname === name ? '' : nickname
     const title = [name, username].filter(Boolean).join(' - ')
 
     return (
@@ -80,11 +78,8 @@ const handleQuerySearch = debounce(
     100
 )
 
-export async function initTypeaheadElement(
-    container: HTMLElement
-): HTMLElement {
-    var input = await elementReady('#search_reviewers .typeahead')
-    var repoUrl = getRepoURL()
+export async function initTypeaheadElement(): HTMLElement {
+    const input = await elementReady('#search_reviewers .typeahead')
 
     $(input).typeahead(
         {
@@ -107,7 +102,7 @@ export async function initTypeaheadElement(
     $(input).bind('typeahead:select', selectReviewer)
     $(input).bind('typeahead:autocomplete', selectReviewer)
     // Move dropdown trapped in <ul> container
-    var dropdown = await elementReady(
+    const dropdown = await elementReady(
         '#search_reviewers .twitter-typeahead .tt-menu'
     )
     $(dropdown).insertAfter('#selected_reviewers')

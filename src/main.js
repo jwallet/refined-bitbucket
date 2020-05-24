@@ -237,7 +237,6 @@ function codeReviewFeatures(config) {
             this.getAttribute('aria-hidden') === 'true'
         )
             return
-
         try {
             if (this.matches(summarySelectors.join(', '))) {
                 return manipulateSummary(this)
@@ -248,16 +247,16 @@ function codeReviewFeatures(config) {
             }
 
             if (this.matches(generalCommentsSelector)) {
-                return insertShowComments(this, true)
+                return manipulateGeneralComments(this)
             }
         } catch (error) {
             // Something went wrong
-            console.error('refined-bitbucket(code-review): ', error, this)
+            console.error('refined-bitbucket(code-review): ', error)
         }
     })
 
     if (config.lineLengthLimitEnabled) {
-        setLineLengthLimit(config.lineLengthLimit, config.stickyHeader)
+        setLineLengthLimit(config.lineLengthLimit)
     }
 
     if (config.stickyHeader) {

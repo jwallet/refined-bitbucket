@@ -8,7 +8,6 @@ import {
 import {
     getCurrentReviewers,
     prefetchAllReviewers,
-    isDefaultReviewersSameThanSelected,
     getReviewersFieldValue,
 } from '../data-selectors'
 

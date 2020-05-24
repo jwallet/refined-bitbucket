@@ -28,8 +28,8 @@ export const getCurrentPullRequestAuthorAccountId: () => string = onetime(
     (): string => {
         const data = document.body.dataset.currentPr
         if (!data) return ''
-        var pullRequest = JSON.parse(data)
-        return (pullRequest.author && pullRequest.author['mention_id']) || ''
+        const pullRequest = JSON.parse(data)
+        return (pullRequest.author && pullRequest.author.mention_id) || ''
     }
 )
 

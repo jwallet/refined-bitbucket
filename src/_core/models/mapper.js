@@ -10,6 +10,7 @@ export function mapUserXhrToUser(userXhr: IUserXHR): IUser {
         avatar: userXhr.avatar_url,
         display_name: userXhr.display_name,
         is_team: userXhr.is_team,
+        uuid: userXhr.uuid,
         is_teammate: userXhr.is_teammate,
         account_id: userXhr.mention_id,
         nickname: userXhr.nickname,

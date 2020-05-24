@@ -153,7 +153,7 @@ test('should not syntax-highlight if diff is in a not supported language', t => 
             </div>
 
             <div class="refract-content-container">
-                <pre>var msg = 'Hello world';</pre>
+                <pre class="source">var msg = 'Hello world';</pre>
             </div>
         </section>
     )

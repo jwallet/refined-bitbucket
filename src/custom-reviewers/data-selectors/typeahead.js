@@ -1,27 +1,28 @@
 // @flow
 import { h } from 'dom-chef'
 import _deburr from 'lodash.deburr'
-import debounce from '../../debounce'
-import {
-    getReviewersFieldValue,
-    addReviewer,
-    isUserRecentReviewer,
-} from './form-reviewers-input'
+
 import { IUser, IUserXHR, mapUsersXhrToUsers } from '../../_core/models'
 import {
     insertUserToSelectedReviewers,
     removeUserFromRecentReviewers,
     removeUserFromAuthorReviewers,
 } from '../ui-renderer'
-import { isUserAuthorReviewer } from './compare-metadata'
 import {
     getCurrentPullRequestAuthorAccountId,
     getCurrentUserAccountId,
 } from '../../utils'
 import api from '../../api'
 
-var authorId = getCurrentPullRequestAuthorAccountId()
-var meId = getCurrentUserAccountId()
+import { isUserAuthorReviewer } from './compare-metadata'
+import {
+    getReviewersFieldValue,
+    addReviewer,
+    isUserRecentReviewer,
+} from './form-reviewers-input'
+
+const authorId = getCurrentPullRequestAuthorAccountId()
+const meId = getCurrentUserAccountId()
 
 function getRestrictedUserIds(): string[] {
     return [...getReviewersFieldValue(), authorId || meId]

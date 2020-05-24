@@ -1,7 +1,6 @@
 import elementReady from 'element-ready'
 import { h } from 'dom-chef'
 import './custom-reviewers.css'
-import { formElement } from './templates'
 import {
     initSelectedReviewers,
     initRecentReviewers,
@@ -20,7 +19,7 @@ import {
 import { initTypeaheadElement } from './templates/typeahead'
 
 export default async function customReviewersFeature(config) {
-    // sub features
+    // Sub features
     const { customReviewersTeamsFeature: isTeamsFeatureEnabled } = config
 
     // Get ready
@@ -35,7 +34,7 @@ export default async function customReviewersFeature(config) {
     // Mount ui
     insertActions(container, isTeamsFeatureEnabled)
     insertForm(container)
-    initTypeaheadElement(container)
+    initTypeaheadElement()
 
     // Init
     await initSelectedReviewers()

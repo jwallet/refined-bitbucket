@@ -4,8 +4,8 @@ import { IUser } from '../../_core/models'
 
 export function clearReviewersFieldValue(): void {
     $('#reviewers')
-        .val('') // clear field value: selected ids
-        .data('selected', '') // clear field data: selected users
+        .val('') // Clear field value: selected ids
+        .data('selected', '') // Clear field data: selected users
 }
 
 export function getRecentReviewers(): IUser[] {

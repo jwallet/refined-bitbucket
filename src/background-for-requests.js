@@ -48,14 +48,14 @@ async function get<T: Object>(
     try {
         const result: BitbucketAPIErrorResponse | T = await response.json()
         return result
-    } catch (ex) {
-        console.error(ex)
-        return ex
+    } catch (error) {
+        console.error(error)
+        return error
     }
 }
 
 function getUrl(request: Request | RequestById | RequestByTerm): string {
-    const { repoUrl, name, id, term } = request
+    const { repoUrl, name, id = '', term = '' } = request
     switch (name) {
         case RequestTypes.getBranches:
             return `https://api.bitbucket.org/2.0/repositories/${repoUrl}/refs/branches`
