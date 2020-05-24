@@ -220,7 +220,6 @@ function codeReviewFeatures(config) {
             this.getAttribute('aria-hidden') === 'true'
         )
             return
-
         try {
             if (this.matches(summarySelectors.join(', '))) {
                 return manipulateSummary(this)
@@ -235,12 +234,12 @@ function codeReviewFeatures(config) {
             }
         } catch (error) {
             // Something went wrong
-            console.error('refined-bitbucket(code-review): ', error, this)
+            console.error('refined-bitbucket(code-review): ', error)
         }
     })
 
     if (config.lineLengthLimitEnabled) {
-        setLineLengthLimit(config.lineLengthLimit, config.stickyHeader)
+        setLineLengthLimit(config.lineLengthLimit)
     }
 
     if (config.stickyHeader) {
