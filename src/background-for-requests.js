@@ -85,7 +85,7 @@ async function get<T: Object>(
         return result
     } catch (error) {
         console.error(error)
-        return error
+        throw error
     }
 }
 
