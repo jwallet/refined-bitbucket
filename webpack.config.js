@@ -8,9 +8,9 @@ module.exports = {
     devtool: 'source-map',
     entry: {
         main: './src/main',
-        options: './src/_core/options/options',
-        popup: './src/_core/popup/popup',
         background: './src/background',
+        'options/options': './src/_core/options/options',
+        'popup/popup': './src/_core/popup/popup',
         'background-for-requests': './src/background-for-requests',
     },
     plugins: [
@@ -26,21 +26,16 @@ module.exports = {
         new CopyWebpackPlugin([
             {
                 from: '*',
-                context: 'src/*',
+                context: 'src',
                 ignore: '*.js',
             },
             {
                 from: 'src/vendor/prism.js',
             },
             {
-                context: 'src/_core/options',
-                from: '*',
-                ignore: '*.js',
-            },
-            {
-                context: 'src/_core/popup',
-                from: '*',
-                ignore: '*.js',
+                context: 'src/_core',
+                from: '*/*',
+                ignore: ['models/*', '*.js'],
             },
         ]),
     ],
