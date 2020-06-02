@@ -179,15 +179,11 @@ function codeReviewFeatures(config) {
             return
         }
 
-        if (config.highlightOcurrences) {
-            occurrencesHighlighter(diff)
-        }
+        autocollapse.collapseIfNeeded(diff)
 
         if (config.collapseDiff) {
             collapseDiff.insertCollapseDiffButton(diff)
         }
-
-        autocollapse.collapseIfNeeded(diff)
 
         if (config.showCommentsCheckbox) {
             insertShowComments(diff, false)
@@ -195,6 +191,10 @@ function codeReviewFeatures(config) {
 
         if (config.copyFilename) {
             insertCopyFilename(diff)
+        }
+
+        if (config.highlightOcurrences) {
+            occurrencesHighlighter(diff)
         }
 
         if (config.diffPlusesAndMinuses || config.syntaxHighlight) {
