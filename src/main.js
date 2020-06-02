@@ -175,10 +175,6 @@ function codeReviewFeatures(config) {
     }
 
     const manipulateDiff = diff => {
-        if (autocollapse.collapseIfNeeded(diff)) {
-            return
-        }
-
         if (diffIgnore.isIgnored(diff)) {
             return
         }
@@ -190,6 +186,8 @@ function codeReviewFeatures(config) {
         if (config.collapseDiff) {
             collapseDiff.insertCollapseDiffButton(diff)
         }
+
+        autocollapse.collapseIfNeeded(diff)
 
         if (config.showCommentsCheckbox) {
             insertShowComments(diff, false)
