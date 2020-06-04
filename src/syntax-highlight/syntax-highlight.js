@@ -12,7 +12,10 @@ import './fix.css'
 
 const codeContainerObserver = new MutationObserver(mutations => {
     mutations.forEach(mutation =>
-        syntaxHighlightSourceCodeLines($(mutation.target))
+        syntaxHighlightSourceCodeLines(
+            $(mutation.target),
+            'pre.source:not([class*=language])'
+        )
     )
 })
 
@@ -78,13 +81,13 @@ async function syntaxHighlightSourceCodeLines($diff, querySelector) {
                 const { classList, firstChild, innerText } = preElement
 
                 if (firstChild.$$rbb_isSyntaxHighlighted) {
-                    reject('Already highlighted')
+                    reject(new Error('Already highlighted'))
                     return
                 }
 
                 // Lines over the arbitrary max length of 9999 will be considered as minified
                 if (innerText && innerText.length > 9999) {
-                    reject(`Line is too long, probably minified`)
+                    reject(new Error('Line is too long, probably minified'))
                     return
                 }
 
