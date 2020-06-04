@@ -2,7 +2,6 @@
 
 /* eslint-disable import/first */
 /* eslint-disable no-multi-assign */
-global.jQuery = global.$ = require('jquery')
 
 import OptionsSync from 'webext-options-sync'
 import SelectorObserver from 'selector-observer'
@@ -37,8 +36,8 @@ import setStickyHeader from './sticky-header'
 import setLineLengthLimit from './limit-line-length'
 import collapsePullRequestSideMenus from './collapse-pull-request-side-menus'
 import insertDashboardOverviewFilters from './dashboard-pull-requests'
-
 import observeForWordDiffs from './observe-for-word-diffs'
+import customReviewersFeature from './custom-reviewers/custom-reviewers'
 
 import {
     isPullRequest,
@@ -49,6 +48,7 @@ import {
     isComparePage,
     isDashBoardOverview,
     isDashBoardPullRequests,
+    isEditPullRequestURL,
 } from './page-detect'
 
 import addStyleToPage from './add-style'
@@ -74,15 +74,9 @@ function init(config) {
     } else if (isPullRequestList() || isDashBoardOverview()) {
         pullrequestListRelatedFeatures(config)
     } else if (isCreatePullRequestURL()) {
-        if (config.prTemplateEnabled) {
-            insertPullrequestTemplate(config.prTemplateUrl)
-        }
-
-        if (config.closeAnchorBranch) {
-            closeAnchorBranch()
-        }
-
-        codeReviewFeatures(config)
+        createPullRequestRelatedFeatures(config)
+    } else if (isEditPullRequestURL()) {
+        editPullRequestRelatedFeatures(config)
     } else if (isCommit()) {
         codeReviewFeatures(config)
     } else if (isComparePage()) {
@@ -108,6 +102,29 @@ function init(config) {
     if (config.customStyles) {
         addStyleToPage(config.customStyles)
     }
+}
+
+function createPullRequestRelatedFeatures(config) {
+    if (config.customReviewers) {
+        customReviewersFeature(config)
+    }
+    if (config.prTemplateEnabled) {
+        insertPullrequestTemplate(config.prTemplateUrl)
+    }
+    if (config.closeAnchorBranch) {
+        closeAnchorBranch()
+    }
+    codeReviewFeatures(config)
+}
+
+function editPullRequestRelatedFeatures(config) {
+    if (config.customReviewers) {
+        customReviewersFeature(config)
+    }
+    if (config.closeAnchorBranch) {
+        closeAnchorBranch()
+    }
+    codeReviewFeatures(config)
 }
 
 function pullrequestListRelatedFeatures(config) {
@@ -162,15 +179,11 @@ function codeReviewFeatures(config) {
             return
         }
 
-        if (config.highlightOcurrences) {
-            occurrencesHighlighter(diff)
-        }
+        autocollapse.collapseIfNeeded(diff)
 
         if (config.collapseDiff) {
             collapseDiff.insertCollapseDiffButton(diff)
         }
-
-        autocollapse.collapseIfNeeded(diff)
 
         if (config.showCommentsCheckbox) {
             insertShowComments(diff, false)
@@ -178,6 +191,10 @@ function codeReviewFeatures(config) {
 
         if (config.copyFilename) {
             insertCopyFilename(diff)
+        }
+
+        if (config.highlightOcurrences) {
+            occurrencesHighlighter(diff)
         }
 
         if (config.diffPlusesAndMinuses || config.syntaxHighlight) {

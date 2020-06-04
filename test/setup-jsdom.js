@@ -6,7 +6,6 @@ import { addApiTokenMetadata, setUrlLocation } from './test-utils'
 
 const dom = new jsdom.JSDOM(undefined, { url: 'http://localhost' })
 global.window = dom.window
-global.localStorage = dom.window.localStorage
 global.document = dom.window.document
 global.navigator = dom.window.navigator
 global.NodeList = dom.window.NodeList

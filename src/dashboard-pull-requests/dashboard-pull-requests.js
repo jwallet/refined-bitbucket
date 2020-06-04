@@ -4,6 +4,12 @@
 import elementReady from 'element-ready'
 import { h } from 'dom-chef'
 import SelectorObserver from 'selector-observer'
+import {
+    getDashboardPullRequestsStorageKey,
+    getStorageSyncValue,
+    setStorageSyncValue,
+} from '../storage'
+import { getCurrentUser } from '../utils'
 
 export const filterStyle = {
     color: '#091E42',
@@ -27,28 +33,32 @@ const filtersHidingSelector = {
     notMe: 'span.inline-user--name',
 }
 
-function isSavedFilterChecked(filterName) {
-    return localStorage.getItem(classFilter(filterName)) === 'true'
+async function isSavedFilterChecked(actionId) {
+    return (
+        (await getStorageSyncValue(
+            getDashboardPullRequestsStorageKey(actionId)
+        )) === 'true'
+    )
 }
 
 function pullRequestRowWatcher() {
     return new SelectorObserver(
         document.body,
         '#pullrequests tr.iterable-item',
-        () => {
-            if (isSavedFilterChecked(filterNames.successfulBuilds)) {
+        async () => {
+            if (await isSavedFilterChecked(filterNames.successfulBuilds)) {
                 hide(
                     filtersHidingSelector.successfulBuilds,
                     filterNames.successfulBuilds
                 )
             }
-            if (isSavedFilterChecked(filterNames.allTasksResolved)) {
+            if (await isSavedFilterChecked(filterNames.allTasksResolved)) {
                 hide(
                     filtersHidingSelector.allTasksResolved,
                     filterNames.allTasksResolved
                 )
             }
-            if (isSavedFilterChecked(filterNames.needsMyApproval)) {
+            if (await isSavedFilterChecked(filterNames.needsMyApproval)) {
                 hide(
                     filtersHidingSelector.needsMyApproval,
                     filterNames.needsMyApproval,
@@ -60,7 +70,7 @@ function pullRequestRowWatcher() {
 }
 
 async function newCheckbox(filterName, notMe) {
-    const checked = isSavedFilterChecked(filterName)
+    const checked = await isSavedFilterChecked(filterName)
     if (checked) {
         await elementReady('#pullrequests')
         hide(filtersHidingSelector[filterName], filterName, notMe)
@@ -76,16 +86,11 @@ async function newCheckbox(filterName, notMe) {
     return <input name={filterName} style={filterStyle} type="checkbox" />
 }
 
-function getElementUuid(el: HTMLElement, attr: string) {
-    const user = JSON.parse(el.getAttribute(attr) || '{}')
-    return user ? user.uuid : ''
-}
-
 function performHide(el: HTMLElement, filterName: string) {
     const row = el.closest('tr')
     if (!row) return
 
-    row.classList.add(classFilter(filterName))
+    row.classList.add(getDashboardPullRequestsStorageKey(filterName))
     row.classList.add(classHide)
     return row
 }
@@ -96,43 +101,39 @@ function hide(querySelector: string, filterName: string, notMe = false) {
     ): any)
 
     if (notMe) {
-        const me: string = getElementUuid(
-            (document.body: any),
-            'data-current-user'
-        )
-        container.querySelectorAll(filtersHidingSelector.notMe).forEach(el => {
-            const uuidFound = getElementUuid(el, 'data-user')
-            if (uuidFound !== me) return
-            performHide(el, filterName)
-        })
+        const meId = getCurrentUser().account_id
+        ;[...container.querySelectorAll(filtersHidingSelector.notMe)]
+            .filter(el => ($(el).data('user') || {}).account_id === meId)
+            .forEach(el => performHide(el, filterName))
     }
 
-    const els = container.querySelectorAll(querySelector)
-
-    if (!els || els.length === 0) return
-
-    els.forEach(el => performHide(el, filterName))
+    ;(container.querySelectorAll(querySelector) || []).forEach(el =>
+        performHide(el, filterName)
+    )
 }
 
 function show(filterName: string) {
-    const container: HTMLElement = (document.getElementById(
-        'pullrequests'
-    ): any)
-    const els = container.querySelectorAll(`tr.${classFilter(filterName)}`)
-    els.forEach(el => {
-        el.classList.remove(classFilter(filterName))
-        el.classList.remove(classHide)
-        return el
-    })
+    ;(document.getElementById('pullrequests'): any)
+        .querySelectorAll(
+            `tr.${getDashboardPullRequestsStorageKey(filterName)}`
+        )
+        .forEach(el => {
+            el.classList.remove(getDashboardPullRequestsStorageKey(filterName))
+            el.classList.remove(classHide)
+            return el
+        })
 }
 
-function save(filterName: string, checked: boolean) {
-    localStorage.setItem(classFilter(filterName), checked.toString())
+function saveFilter(actionId: string, checked: boolean) {
+    return setStorageSyncValue(
+        getDashboardPullRequestsStorageKey(actionId),
+        checked.toString()
+    )
 }
 
-function onFilterSuccessfulBuilds(e) {
+async function onFilterSuccessfulBuilds(e) {
     const { checked } = (e.target: any)
-    save(filterNames.successfulBuilds, checked)
+    await saveFilter(filterNames.successfulBuilds, checked)
     return checked
         ? hide(
               filtersHidingSelector.successfulBuilds,
@@ -141,9 +142,9 @@ function onFilterSuccessfulBuilds(e) {
         : show(filterNames.successfulBuilds)
 }
 
-function onFilterAllTasksResolved(e) {
+async function onFilterAllTasksResolved(e) {
     const { checked } = (e.target: any)
-    save(filterNames.allTasksResolved, checked)
+    await saveFilter(filterNames.allTasksResolved, checked)
     return checked
         ? hide(
               filtersHidingSelector.allTasksResolved,
@@ -152,9 +153,9 @@ function onFilterAllTasksResolved(e) {
         : show(filterNames.allTasksResolved)
 }
 
-function onFilterNeedsMyApproval(e) {
+async function onFilterNeedsMyApproval(e) {
     const { checked } = (e.target: any)
-    save(filterNames.needsMyApproval, checked)
+    await saveFilter(filterNames.needsMyApproval, checked)
     return checked
         ? hide(
               filtersHidingSelector.needsMyApproval,
@@ -169,8 +170,9 @@ export default async function insertDashboardOverviewFilters() {
         'div.filter-container ul.filter-status'
     )
 
-    // Team filter bloc when teams active desactivates filter by row
+    // Workspaces Tab selected: Official Bitbucket grid filter desactivates the header (their bug)
     const form = document.getElementById('team-filter')
+
     // eslint-disable-next-line eqeqeq, no-eq-null
     if (form != null) form.remove()
 
@@ -218,5 +220,5 @@ export default async function insertDashboardOverviewFilters() {
     container.appendChild(filterAllTasksResolvedWrapper)
     container.appendChild(filterNeedsMyApprovalWrapper)
 
-    pullRequestRowWatcher()
+    await pullRequestRowWatcher()
 }

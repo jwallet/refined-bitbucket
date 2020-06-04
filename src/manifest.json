@@ -44,7 +44,9 @@
     {
       "js": [
         "prism.js",
-        "main.js"
+        "main.js",
+        "popup/popup.js",
+        "options/options.js"
       ],
       "matches": ["https://bitbucket.org/*", "https://*.bitbucket.org/*"]
     }

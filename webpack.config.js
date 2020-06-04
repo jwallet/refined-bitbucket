@@ -8,14 +8,19 @@ module.exports = {
     devtool: 'source-map',
     entry: {
         main: './src/main',
+        background: './src/background',
         'options/options': './src/_core/options/options',
         'popup/popup': './src/_core/popup/popup',
-        background: './src/background',
         'background-for-requests': './src/background-for-requests',
     },
     plugins: [
         new webpack.DefinePlugin({
             process: {},
+        }),
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery',
         }),
         new webpack.optimize.ModuleConcatenationPlugin(),
         new CopyWebpackPlugin([
@@ -37,6 +42,14 @@ module.exports = {
     output: {
         path: path.join(__dirname, 'extension'),
         filename: '[name].js',
+    },
+    resolve: {
+        alias: {
+            typeahead: path.resolve(
+                __dirname,
+                'src/vendor/typeahead.jquery.js'
+            ),
+        },
     },
     module: {
         rules: [

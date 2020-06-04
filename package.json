@@ -1,7 +1,7 @@
 {
   "name": "refined-bitbucket",
   "description": "Chrome extension that improves BitBucket's user interface",
-  "version": "3.20.0",
+  "version": "3.21.0",
   "main": "index.js",
   "scripts": {
     "precommit": "lint-staged",
@@ -102,6 +102,7 @@
     "ignore": "^4.0.6",
     "jquery": "^3.5.0",
     "jquery-highlight": "^3.4.0",
+    "lodash.deburr": "^4.1.0",
     "marked": "^0.7.0",
     "mousetrap": "^1.6.1",
     "onetime": "^2.0.1",

@@ -39,6 +39,7 @@ new OptionsSync().define({
         collapseDiff: true,
         loadAllDiffs: true,
         closeAnchorBranch: true,
+        customReviewers: true,
         addSidebarCounters: true,
         diffPlusesAndMinuses: true,
         augmentPrEntry: true,

@@ -17,6 +17,7 @@ function updateCommonToggleAttributes(target, isEnabled) {
 const toggleExtState = document.getElementById('toggle-ext-state')
 // Menu
 const toggleSyntaxHighlight = document.getElementById('toggle-syntax-highlight')
+const toggleCustomReviewers = document.getElementById('toggle-custom-reviewers')
 
 function run() {
     // Set version tag
@@ -36,11 +37,16 @@ function run() {
 
 // Init all toggle with current value of options here
 async function initOptions() {
-    const { _isExtEnabled, syntaxHighlight } = await optionsStorage.getAll()
+    const {
+        _isExtEnabled,
+        syntaxHighlight,
+        customReviewers,
+    } = await optionsStorage.getAll()
 
     // Toggle extension state
     updateToggleExtStateButton(_isExtEnabled)
     updateToggleSyntaxHighlightButton(syntaxHighlight)
+    updateToggleCustomReviewersButton(customReviewers)
 }
 
 // All toggle event handler are declared here
@@ -50,6 +56,10 @@ function addToggleEventListeners() {
         'click',
         handleToggleSyntaxHighlightClick
     )
+    toggleCustomReviewers.addEventListener(
+        'click',
+        handleToggleCustomReviewersClick
+    )
 }
 
 // All toggle buttons listeners are declared below
@@ -58,6 +68,9 @@ function handleToggleExtStateClick(e) {
 }
 function handleToggleSyntaxHighlightClick(e) {
     updateToggleSyntaxHighlightButton(!getToggleState(e.target), e.target)
+}
+function handleToggleCustomReviewersClick(e) {
+    updateToggleCustomReviewersButton(!getToggleState(e.target), e.target)
 }
 
 // All toggle buttons visual update functions are declared below
@@ -75,6 +88,10 @@ function updateToggleExtStateButton(isEnabled, target = null) {
 function updateToggleSyntaxHighlightButton(isEnabled, target = null) {
     if (target !== null) optionsStorage.set({ syntaxHighlight: isEnabled })
     updateCommonToggleAttributes(target || toggleSyntaxHighlight, isEnabled)
+}
+function updateToggleCustomReviewersButton(isEnabled, target = null) {
+    if (target !== null) optionsStorage.set({ customReviewers: isEnabled })
+    updateCommonToggleAttributes(target || toggleCustomReviewers, isEnabled)
 }
 
 run()
